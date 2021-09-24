@@ -43,7 +43,7 @@ else
    cd "$HOME/BezelProject"
 fi
 mv "bezelproject_linux.sh" "bezelproject_linux.sh.bkp"
-wget "https://raw.githubusercontent.com/Nitr4m12/BezelProject/master/bezelproject_linux.sh"
+wget "https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh"
 chmod 777 "bezelproject.sh"
 exit
 }
