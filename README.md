@@ -1,17 +1,19 @@
-# bezelproject
+# Bezelproject for Linux
+
+A modified script based on the BezelProject to allow for compatibility with regular Linux systems instead of just RetroPie. Requires both dialog and RPL to be installed. It also assumes a default installation of retroarch (i. e. through a package manager).
+
+To get dialog on Arch Linux use ***sudo pacman -S dialog***. RPL is available as an AUR package.
 
 -------
 OVERVIEW
 
 The Bezel Project Bezel Utility menu.
 
-This utility will provide a downloader for Retroarach system bezel packs to be used for various systems within RetroPie.
+This utility will provide a downloader for Retroarach system bezel packs.
 
-This utility provides a download for a bezel pack for a system and includes a PNG bezel file for every ROM for that system.  The download will also include the necessary configuration files needed for Retroarch to show them.  The script will also update the required retroarch.cfg files for the emulators located in the /opt/retropie/configs directory.  These changes are necessary to show the PNG bezels with an opacity of 1.
+This utility provides a download for a bezel pack for a system and includes a PNG bezel file for every ROM for that system.  The download will also include the necessary configuration files needed for Retroarch to show them.
 
 Periodically, new bezel packs are completed and you will need to run the script updater to download the newest version to see these additional packs.
-
-The instructions below will demonstrate how to instal the script and have it show up in the RetroPie menu within Emulation Station.
 
 ***NOTE***
 To have global support, these bezel packs will only work if the ROMs you are using are named according to the No-Intro naming convention used by EmuMovies/HyperSpin.
@@ -20,52 +22,42 @@ Systems with shared Retroarch cores and filenames:
 Only one bezel can exist for a specific game name, so systems that share the same Retroarch core and rom filename will use the same bezel.
 
 -------
-INSTALLATION - using a Raspberry Pi build of RetroPie, or an x86 build under Ubuntu, for example.
+INSTALLATION
 
-NOTE: do not install the script as user 'root'.  Only install the script as user 'pi'...otherwise it may cause future errors.
+NOTE: do not install the script as user 'root'.  Only install the script as a normal user...otherwise it may cause future errors.
 
-Exit out of Emulation Station by pressing F4 (or remote into the Pi using something like Putty)
+Before downloading, make sure bezels are enabled in retroarch by going to **Settings>On-Screen Display>Display Overlay** and setting it to "ON". Make sure fullscreen is enabled in **Settings>Video>Fullscreen Mode>Start in Fullscreen Mode** as well, since these are made to be used in fullscreen.
 
 Type the following commands:
 
-***cd /home/pi/RetroPie/retropiemenu/*** 
+***cd path/to/download/script/to*** 
 
-***wget https://raw.githubusercontent.com/thebezelproject/BezelProject/master/bezelproject.sh***
+***wget https://raw.githubusercontent.com/Nitr4m12/BezelProject/master/bezelproject.sh***
 
-***chmod +x "bezelproject.sh"***
+***chmod +x bezelproject_linux.sh***
 
-Restart Emulation Station and you should then see the new script in the RetroPie menu.
+***./bezelproject_linux.sh*** or ***bash bezelproject_linux.sh***
 
 -------
 UNINSTALL
 
-NOTE: the uninstall script will not remove the Retroarch game config files due to the possibility of user's saving game specific override controller mapping. This will, however, delete all bezel usage from The Bezel Project but keeps any existing game override controller mapping.
-
-To automatically remove The Bezel Project, execute that option in the script.
+NOTE: This modified script has the uninstall option removed by default, since I couldn't think of a way to make it work as it does in RetroPie. As of now, it deletes everything inside the config folder, including custom mappings and .opt files.
 
 To manually remove The Bezel Project, delete the following directories.
 
-/opt/retropie/configs/all/retroarch/overlay/ArcadeBezels
+~/.config/retroarch/overlay/ArcadeBezels
 
-/opt/retropie/configs/all/retroarch/overlay/GameBezels
+~/.config/retroarch/overlay/GameBezels
 
-Edit the retroarch.cfg files located in each emulator's folder located here:
+Edit the retroarch.cfg located in the main directory (I recommend making a backup first):
 
-/opt/retropie/configs/(emulatorname)
+~/.config/retroarch/
 
-And remove the following lines from the file that begin with the following:
-
-input_overlay = xxxxxx 
-
-input_overlay_opacity = xxxxx
+In retroarch, disable overlays by going to Settings>On-Screen Display>Display Overlays, and setting it to "OFF"
 
 To remove the Retroarch game override config files, delete the core named folders located here:
 
-/opt/retropie/configs/all/retroarch/config/(core named folder)
-
-Remove the bezelproject.sh file from here:
-
-/home/pi/RetroPie/retropiemenu/
+~/.config/retroarch/config/(core named folder)
 
 -------
 Supported cores
@@ -123,5 +115,3 @@ Sega SG-1000                                    lr-genesis-plus-gx
 Sony PlayStation                                lr-pcsx-rearmed
 
 Super Nintendo Entertainment System             lr-snes9x, lr-snes9x2010
-
-
