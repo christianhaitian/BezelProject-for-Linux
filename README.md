@@ -30,8 +30,6 @@ Before downloading, make sure bezels are enabled in retroarch by going to **Sett
 
 Type the following commands:
 
-***cd path/to/download/script/to*** 
-
 ***wget https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh***
 
 ***chmod +x bezelproject_linux.sh***
