@@ -68,7 +68,10 @@ function install_bezel_pack() {
     fi
 
     git clone "https://github.com/$repo/bezelproject-$theme.git" "/tmp/${theme}"
-    rpl -x .cfg -R /opt/retropie/configs/all "~/.config" /tmp/${theme}/retroarch/config/**
+    find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
+     sed -i 's+/opt/retropie/configs/all+~/.config+g' "$file"
+     echo 'video_fullscreen = "true"' >> "$file"
+    done
     cp -r "/tmp/${theme}/retroarch/" ${HOME}/.config/
     rm -rf "/tmp/${theme}"
 
