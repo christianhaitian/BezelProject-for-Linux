@@ -37,14 +37,12 @@ function main_menu() {
 #########################################################
 
 function update_script() {
-if [[ -d "$HOME/temp" ]]; then
-   cd "$HOME/temp/BezelProject"
-else
-   cd "$HOME/BezelProject"
-fi
-mv "bezelproject_linux.sh" "bezelproject_linux.sh.bkp"
+# Code taken and modified from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; pwd -P )"
+
+mv "$SCRIPTPATH/bezelproject_linux.sh" "$SCRIPTPATH/bezelproject_linux.sh.bkp"
 wget "https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh"
-chmod 777 "bezelproject.sh"
+chmod 777 "bezelproject_linux.sh"
 exit
 }
 
