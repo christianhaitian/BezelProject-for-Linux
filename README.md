@@ -60,56 +60,56 @@ To remove the Retroarch game override config files, delete the core named folder
 -------
 Supported cores
 
-Arcade                                          lr-mame2003, lr-mame2010, lr-fba
+**Arcade**: lr-mame2003, lr-mame2010, lr-fba
 
-Atari 2600                                      lr-stella
+**Atari 2600**: lr-stella
 
-Atari 5200                                      lr-atari800
+**Atari 5200**: lr-atari800
 
-Atari 7800                                      lr-prosystem
+**Atari 7800**: lr-prosystem
 
-ColecoVision                                    lr-bluemsx
+**ColecoVision**: lr-bluemsx
 
-GCE Vectrex                                     lr-vecx
+**GCE Vectrex**: lr-vecx
 
-NEC PC Engine CD                                lr-beetle-pce-fast
+**NEC PC Engine CD**: lr-beetle-pce-fast
 
-NEC PC Engine                                   lr-beetle-pce-fast
+**NEC PC Engine**: lr-beetle-pce-fast
 
-NEC SuperGrafx                                  lr-beetle-supergrafx
+**NEC SuperGrafx**: lr-beetle-supergrafx
 
-NEC TurboGrafx-CD                               lr-beetle-pce-fast
+**NEC TurboGrafx-CD**: lr-beetle-pce-fast
 
-NEC TurboGrafx-16                               lr-beetle-pce-fast
+**NEC TurboGrafx-16**: lr-beetle-pce-fast
 
-Nintendo 64                                     lr-Mupen64plus
+**Nintendo 64**: lr-Mupen64plus
 
-Nintendo Entertainment System                   lr-fceumm, lr-nestopia
+**Nintendo Entertainment System**: lr-fceumm, lr-nestopia
 
-Nintendo Famicom Disk System                    lr-fceumm, lr-nestopia
+**Nintendo Famicom Disk System**: lr-fceumm, lr-nestopia
 
-Nintendo Famicom                                lr-fceumm, lr-nestopia
+**Nintendo Famicom**: lr-fceumm, lr-nestopia
 
-Nintendo Game Boy                               lr-gambatte, lr-mgba
+**Nintendo Game Boy**: lr-gambatte, lr-mgba
 
-Nintendo Game Boy Color                         lr-gambatte, lr-mgba
+**Nintendo Game Boy Color**: lr-gambatte, lr-mgba
 
-Nintendo Super Famicom                          lr-snes9x, lr-snes9x2010
+**Nintendo Super Famicom**: lr-snes9x, lr-snes9x2010
 
-Sega 32X                                        lr-picodrive, lr-genesis-plus-gx
+**Sega 32X**: lr-picodrive, lr-genesis-plus-gx
 
-Sega CD                                         lr-picodrive, lr-genesis-plus-gx
+**Sega CD**: lr-picodrive, lr-genesis-plus-gx
 
-Sega Genesis                                    lr-picodrive, lr-genesis-plus-gx
+**Sega Genesis**: lr-picodrive, lr-genesis-plus-gx
 
-Sega Master System                              lr-picodrive, lr-genesis-plus-gx
+**Sega Master System**: lr-picodrive, lr-genesis-plus-gx
 
-Sega Mega Drive                                 lr-picodrive, lr-genesis-plus-gx
+**Sega Mega Drive**: lr-picodrive, lr-genesis-plus-gx
 
-Sega Mega Drive Japan                           lr-picodrive, lr-genesis-plus-gx
+**Sega Mega Drive Japan**: lr-picodrive, lr-genesis-plus-gx
 
-Sega SG-1000                                    lr-genesis-plus-gx
+**Sega SG-1000**: lr-genesis-plus-gx
 
-Sony PlayStation                                lr-pcsx-rearmed
+**Sony PlayStation**: lr-pcsx-rearmed
 
-Super Nintendo Entertainment System             lr-snes9x, lr-snes9x2010
+**Super Nintendo Entertainment System**: lr-snes9x, lr-snes9x2010
