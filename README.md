@@ -1,8 +1,8 @@
 # Bezelproject for Linux
 
-A modified script based on the BezelProject to allow for compatibility with regular Linux systems instead of just RetroPie. Requires both dialog and RPL to be installed. It also assumes a default installation of retroarch (i. e. through a package manager).
+A modified script based on the BezelProject to allow for compatibility with regular Linux systems instead of just RetroPie. Requires dialog. It also assumes a default installation of retroarch (i. e. through a package manager).
 
-To get dialog on Arch Linux use ***sudo pacman -S dialog***. RPL is available as an AUR package.
+To get dialog on Arch Linux use ***sudo pacman -S dialog***.
 
 -------
 OVERVIEW
