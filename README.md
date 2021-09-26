@@ -24,9 +24,7 @@ Only one bezel can exist for a specific game name, so systems that share the sam
 -------
 INSTALLATION
 
-NOTE: do not install the script as user 'root'.  Only install the script as a normal user...otherwise it may cause future errors. MAKE SURE **DIALOG** AND **RPL** ARE INSTALLED OR THE SCRIPT WON'T WORK.
-
-Before downloading, make sure bezels are enabled in retroarch by going to **Settings>On-Screen Display>Display Overlay** and setting it to "ON". Make sure to also enable fullscreen in **Settings>Video>Fullscreen Mode>Start in Fullscreen Mode**, since these are made to be used in fullscreen and break on Windowed Mode.
+NOTE: do not install the script as user 'root'.  Only install the script as a normal user...otherwise it may cause future errors. MAKE SURE **DIALOG** IS INSTALLED OR THE SCRIPT WON'T WORK.
 
 Type the following commands:
 
