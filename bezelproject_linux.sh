@@ -86,11 +86,11 @@ function uninstall_bezel_pack() {
     fi
 }
 
-function removebezelproject() {
-rm -rf $HOME/.config/retroarch/overlay/GameBezels
-rm -rf $HOME/.config/retroarch/overlay/ArcadeBezels
-rm -rf $HOME/.config/retroarch/config/**
-}
+#function removebezelproject() {
+#rm -rf $HOME/.config/retroarch/overlay/GameBezels
+#rm -rf $HOME/.config/retroarch/overlay/ArcadeBezels
+#rm -rf $HOME/.config/retroarch/config/**
+#}
 
 function download_bezel() {
     local themes=(
