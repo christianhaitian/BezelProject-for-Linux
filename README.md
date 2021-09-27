@@ -9,7 +9,7 @@ OVERVIEW
 
 The Bezel Project Bezel Utility menu.
 
-This utility will provide a downloader for Retroarach system bezel packs.
+This utility will provide a downloader for Retroarch system bezel packs.
 
 This utility provides a download for a bezel pack for a system and includes a PNG bezel file for every ROM for that system.  The download will also include the necessary configuration files needed for Retroarch to show them.
 
