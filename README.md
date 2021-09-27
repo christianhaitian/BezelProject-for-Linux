@@ -39,7 +39,7 @@ Type the following commands:
 -------
 UNINSTALL
 
-NOTE: This modified script has the uninstall option removed by default, since I couldn't think of a way to make it work as it does in RetroPie. As of now, it deletes everything inside the config folder, including custom mappings and .opt files.
+NOTE: This modified script only uninstalls the bezels, and not the .cfg files in your config folder. To uninstall those, you'll have to do it manually. 
 
 To manually remove The Bezel Project, delete the following directories.
 
