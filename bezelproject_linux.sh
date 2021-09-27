@@ -19,14 +19,16 @@ function main_menu() {
             1 "Update install script - script will exit when updated" \
             2 "Download theme style bezel pack" \
             3 "Download system style bezel pack" \
-            4 "Information:  Retroarch cores setup for bezels per system" \
+            4 "Uninstall the Bezel Project" \
+            5 "Information:  Retroarch cores setup for bezels per system" \
             2>&1 > /dev/tty)
 
         case "$choice" in
             1) update_script  ;;
             2) download_bezel  ;;
             3) download_bezelsa  ;;
-            4) retroarch_bezelinfo  ;;
+            4) removebezelproject ;;
+            5) retroarch_bezelinfo  ;;
             *)  break ;;
         esac
     done
@@ -80,11 +82,11 @@ function uninstall_bezel_pack() {
     fi
 }
 
-#function removebezelproject() {
-#rm -rf $HOME/.config/retroarch/overlay/GameBezels
-#rm -rf $HOME/.config/retroarch/overlay/ArcadeBezels
+function removebezelproject() {
+rm -rf $HOME/.config/retroarch/overlay/GameBezels
+rm -rf $HOME/.config/retroarch/overlay/ArcadeBezels
 #rm -rf $HOME/.config/retroarch/config/**
-#}
+}
 
 function download_bezel() {
     local themes=(
