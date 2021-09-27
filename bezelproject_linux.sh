@@ -18,17 +18,17 @@ function main_menu() {
             --menu "What action would you like to perform?" 25 75 20 \
             1 "Update install script - script will exit when updated" \
             2 "Download theme style bezel pack" \
-            3 "Download system style bezel pack" \
-            4 "Uninstall the Bezel Project" \
-            5 "Information:  Retroarch cores setup for bezels per system" \
+            3 "Download system style bezel pack" \  
+            4 "Information:  Retroarch cores setup for bezels per system" \
+            5 "Uninstall the bezel project completely" \
             2>&1 > /dev/tty)
 
         case "$choice" in
             1) update_script  ;;
             2) download_bezel  ;;
             3) download_bezelsa  ;;
-            4) removebezelproject ;;
-            5) retroarch_bezelinfo  ;;
+            4) retroarch_bezelinfo  ;;
+            5) removebezelproject ;;
             *)  break ;;
         esac
     done
