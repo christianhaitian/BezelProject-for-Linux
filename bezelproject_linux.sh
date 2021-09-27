@@ -58,13 +58,6 @@ function install_bezel_pack() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    if [[ "${atheme}" == "mame" ]];then
-      mv "$HOME/.config/retroarch/config/disable_FB Alpha" "$HOME/.config/retroarch/config/FB Alpha" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2003-Plus" "$HOME/.config/retroarch/config/MAME 2003-Plus" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2003 (0.78)" "$HOME/.config/retroarch/config/MAME 2003 (0.78)" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2010" "$HOME/.config/retroarch/config/MAME 2010" 2> /dev/null
-    fi
-
     git clone "https://github.com/$repo/bezelproject-$theme.git" "/tmp/${theme}"
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
      sed -i 's+/opt/retropie/configs/all+~/.config+g' "$file"
@@ -208,17 +201,13 @@ function install_bezel_packsa() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    if [[ "${atheme}" == "mame" ]];then
-      mv "$HOME/.config/retroarch/config/disable_FB Alpha" "$HOME/.config/retroarch/config/FB Alpha" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2003-Plus" "$HOME/.config/retroarch/config/MAME 2003-Plus" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2003 (0.78)" "$HOME/.config/retroarch/config/MAME 2003 (0.78)" 2> /dev/null
-      mv "$HOME/.config/retroarch/config/disable_MAME 2010" "$HOME/.config/retroarch/config/MAME 2010" 2> /dev/null
-    fi
-
     git clone "https://github.com/$repo/bezelprojectsa-$theme.git" "/tmp/${theme}"
+    find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
+     sed -i 's+/opt/retropie/configs/all+~/.config+g' "$file"
+     echo 'video_fullscreen = "true"' >> "$file"
+    done
     cp -r "/tmp/${theme}/retroarch/" $HOME/.config/
     rm -rf "/tmp/${theme}"
-    rpl -x .cfg -R /opt/retropie/configs/all "~/.config" ~/.config/retroarch/config/**
 }
 
 function download_bezelsa() {
