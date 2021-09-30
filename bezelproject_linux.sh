@@ -18,9 +18,9 @@ function main_menu() {
             --menu "What action would you like to perform?" 25 75 20 \
             1 "Update install script - script will exit when updated" \
             2 "Download theme style bezel pack" \
-            3 "Download system style bezel pack" \  
+            3 "Download system style bezel pack" \
             4 "Information:  Retroarch cores setup for bezels per system" \
-            5 "Uninstall the bezel project completely" \
+	    5 "Uninstall the bezel project completely" \
             2>&1 > /dev/tty)
 
         case "$choice" in
@@ -28,7 +28,7 @@ function main_menu() {
             2) download_bezel  ;;
             3) download_bezelsa  ;;
             4) retroarch_bezelinfo  ;;
-            5) removebezelproject ;;
+	        5) removebezelproject ;;
             *)  break ;;
         esac
     done
@@ -38,14 +38,15 @@ function main_menu() {
 # Functions for download and enable/disable bezel packs #
 #########################################################
 
-function update_script() {
-# Code taken and modified from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
-SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; pwd -P )"
 
-mv "$SCRIPTPATH/bezelproject_linux.sh" "$SCRIPTPATH/bezelproject_linux.sh.bkp"
-wget "https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh"
-chmod 777 "bezelproject_linux.sh"
-exit
+function update_script() {
+    # Code taken and modified from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
+    SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; pwd -P )"
+
+    mv "${SCRIPTPATH}/bezelproject_linux.sh" "${SCRIPTPATH}/bezelproject_linux.sh.bkp"
+    wget "https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh"
+    chmod 777 "bezelproject_linux.sh"
+    exit
 }
 
 function install_bezel_pack() {
@@ -60,32 +61,46 @@ function install_bezel_pack() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    git clone "https://github.com/$repo/bezelproject-$theme.git" "/tmp/${theme}"
+    git clone "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}"
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-     sed -i 's+/opt/retropie/configs/all+~/.config+g' "$file"
-     echo 'video_fullscreen = "true"' >> "$file"
+        sed -i 's+/opt/retropie/configs/all+~/.config+g' "${file}"
+        echo 'video_fullscreen = "true"' >> "${file}"
     done
-    cp -r "/tmp/${theme}/retroarch/" ${HOME}/.config/
+    if [[ ! -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
+        mkdir "${HOME}/.config/retroarch/overlay/GameBezels/${theme}"
+        ls "/tmp/${theme}/retroarch/config" >> "${HOME}/.config/retroarch/overlay/GameBezels/${theme}/emulators.txt" 
+        cat "${HOME}/.config/retroarch/overlay/GameBezels/${theme}/emulators.txt" >> "${HOME}/.config/retroarch/overlay/all_emulators.txt"
+    fi
+    cp -r "/tmp/${theme}/retroarch/" "${HOME}/.config/"
     rm -rf "/tmp/${theme}"
-
 }
 
 function uninstall_bezel_pack() {
     local theme="$1"
-    if [[ -d "$HOME/.config/retroarch/overlay/GameBezels/$theme" ]]; then
-        rm -rf "$HOME/.config/retroarch/overlay/GameBezels/$theme"
+    if [[ -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
+        while IFS= read -r dir; do
+            rm -rf "${HOME}/.config/retroarch/config/${dir}" 
+        done < "${HOME}/.config/retroarch/overlay/${theme}/emulators.txt"
+        rm -rf "${HOME}/.config/retroarch/overlay/GameBezels/${theme}"
     fi
     if [[ "${theme}" == "MAME" ]]; then
-      if [[ -d "$HOME/.config/retroarch/overlay/ArcadeBezels" ]]; then
-        rm -rf "$HOME/.config/retroarch/overlay/ArcadeBezels"
+      if [[ -d "${HOME}/.config/retroarch/overlay/ArcadeBezels" ]]; then
+        while IFS= read -r dir; do
+            rm -rf "${HOME}/.config/retroarch/config/${dir}" 
+        done < "${HOME}/.config/retroarch/overlay/MAME/emulators.txt"      
+        rm -rf "${HOME}/.config/retroarch/overlay/ArcadeBezels"
       fi
     fi
 }
 
 function removebezelproject() {
-rm -rf $HOME/.config/retroarch/overlay/GameBezels
-rm -rf $HOME/.config/retroarch/overlay/ArcadeBezels
-#rm -rf $HOME/.config/retroarch/config/**
+    rm -rf "${HOME}/.config/retroarch/overlay/GameBezels"
+    rm -rf "${HOME}/.config/retroarch/overlay/ArcadeBezels"
+    # Code adapted from https://askubuntu.com/questions/503334/how-to-move-directories-that-were-listed-in-a-txt-file?rq=1
+    while IFS= read -r dir; do
+        rm -rf "${HOME}/.config/retroarch/config/${dir}" 
+    done < ~/.config/retroarch/overlay/all_emulators.txt
+    rm -f ~/.config/retroarch/overlay/all_emulators.txt
 }
 
 function download_bezel() {
@@ -151,13 +166,13 @@ function download_bezel() {
             if [[ $theme == "MegaDrive" ]]; then
               theme="Megadrive"
             fi
-            if [[ -d "$HOME/.config/retroarch/overlay/GameBezels/$theme" ]]; then
+            if [[ -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
                 status+=("i")
-                options+=("$i" "Update or Uninstall $theme (installed)")
-                installed_bezelpacks+=("$theme $repo")
+                options+=("$i" "Update or Uninstall ${theme} (installed)")
+                installed_bezelpacks+=("${theme} $repo")
             else
                 status+=("n")
-                options+=("$i" "Install $theme (not installed)")
+                options+=("$i" "Install ${theme} (not installed)")
             fi
             ((i++))
         done
@@ -171,20 +186,20 @@ function download_bezel() {
                 repo="${theme[0]}"
                 theme="${theme[1]}"
 #                if [[ "${status[choice]}" == "i" ]]; then
-                if [[ -d "$HOME/.config/retroarch/overlay/GameBezels/$theme" ]]; then
-                    options=(1 "Update $theme" 2 "Uninstall $theme")
+                if [[ -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
+                    options=(1 "Update ${theme}" 2 "Uninstall ${theme}")
                     cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for the bezel pack" 12 40 06)
                     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
                     case "$choice" in
                         1)
-                            install_bezel_pack "$theme" "$repo"
+                            install_bezel_pack "${theme}" "${repo}"
                             ;;
                         2)
-                            uninstall_bezel_pack "$theme"
+                            uninstall_bezel_pack "${theme}"
                             ;;
                     esac
                 else
-                    install_bezel_pack "$theme" "$repo"
+                    install_bezel_pack "${theme}" "${repo}"
                 fi
                 ;;
         esac
@@ -194,21 +209,21 @@ function download_bezel() {
 function install_bezel_packsa() {
     local theme="$1"
     local repo="$2"
-    if [[ -z "$repo" ]]; then
+    if [[ -z "${repo}" ]]; then
         repo="default"
     fi
-    if [[ -z "$theme" ]]; then
+    if [[ -z "${theme}" ]]; then
         theme="default"
         repo="default"
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    git clone "https://github.com/$repo/bezelprojectsa-$theme.git" "/tmp/${theme}"
+    git clone "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}"
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-     sed -i 's+/opt/retropie/configs/all+~/.config+g' "$file"
-     echo 'video_fullscreen = "true"' >> "$file"
+     sed -i 's+/opt/retropie/configs/all+~/.config+g' "${file}"
+     echo 'video_fullscreen = "true"' >> "${file}"
     done
-    cp -r "/tmp/${theme}/retroarch/" $HOME/.config/
+    cp -r "/tmp/${theme}/retroarch/" "${HOME}/.config/"
     rm -rf "/tmp/${theme}"
 }
 
@@ -281,16 +296,16 @@ function download_bezelsa() {
             theme=($theme)
             repo="${theme[0]}"
             theme="${theme[1]}"
-            if [[ $theme == "MegaDrive" ]]; then
+            if [[ ${theme} == "MegaDrive" ]]; then
               theme="Megadrive"
             fi
-            if [[ -d "$HOME/.config/retroarch/overlay/GameBezels/$theme" ]]; then
+            if [[ -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
                 status+=("i")
-                options+=("$i" "Update or Uninstall $theme (installed)")
-                installed_bezelpacks+=("$theme $repo")
+                options+=("$i" "Update or Uninstall ${theme} (installed)")
+                installed_bezelpacks+=("${theme} ${repo}")
             else
                 status+=("n")
-                options+=("$i" "Install $theme (not installed)")
+                options+=("$i" "Install ${theme} (not installed)")
             fi
             ((i++))
         done
@@ -304,20 +319,20 @@ function download_bezelsa() {
                 repo="${theme[0]}"
                 theme="${theme[1]}"
 #                if [[ "${status[choice]}" == "i" ]]; then
-                if [[ -d "$HOME/.config/retroarch/overlay/GameBezels/$theme" ]]; then
-                    options=(1 "Update $theme" 2 "Uninstall $theme")
+                if [[ -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
+                    options=(1 "Update ${theme}" 2 "Uninstall ${theme}")
                     cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for the bezel pack" 12 40 06)
                     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
                     case "$choice" in
                         1)
-                            install_bezel_packsa "$theme" "$repo"
+                            install_bezel_packsa "${theme}" "${repo}"
                             ;;
                         2)
-                            uninstall_bezel_pack "$theme"
+                            uninstall_bezel_pack "${theme}"
                             ;;
                     esac
                 else
-                    install_bezel_packsa "$theme" "$repo"
+                    install_bezel_packsa "${theme}" "${repo}"
                 fi
                 ;;
         esac
