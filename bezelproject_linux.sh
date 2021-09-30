@@ -67,7 +67,7 @@ function install_bezel_pack() {
         echo 'video_fullscreen = "true"' >> "${file}"
     done
     if [[ ! -d "${HOME}/.config/retroarch/overlay/GameBezels/${theme}" ]]; then
-        mkdir "${HOME}/.config/retroarch/overlay/GameBezels/${theme}"
+        mkdir -p "${HOME}/.config/retroarch/overlay/GameBezels/${theme}"
         ls "/tmp/${theme}/retroarch/config" >> "${HOME}/.config/retroarch/overlay/GameBezels/${theme}/emulators.txt" 
         cat "${HOME}/.config/retroarch/overlay/GameBezels/${theme}/emulators.txt" >> "${HOME}/.config/retroarch/overlay/all_emulators.txt"
     fi
