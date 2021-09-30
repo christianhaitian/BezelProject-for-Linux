@@ -20,7 +20,7 @@ function main_menu() {
             2 "Download theme style bezel pack" \
             3 "Download system style bezel pack" \
             4 "Information:  Retroarch cores setup for bezels per system" \
-	    5 "Uninstall the bezel project completely" \
+	        5 "Uninstall the bezel project completely" \
             2>&1 > /dev/tty)
 
         case "$choice" in
@@ -28,7 +28,7 @@ function main_menu() {
             2) download_bezel  ;;
             3) download_bezelsa  ;;
             4) retroarch_bezelinfo  ;;
-	    5) removebezelproject ;;
+	        5) removebezelproject ;;
             *)  break ;;
         esac
     done
