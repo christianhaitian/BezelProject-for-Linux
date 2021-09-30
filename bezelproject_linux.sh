@@ -28,7 +28,7 @@ function main_menu() {
             2) download_bezel  ;;
             3) download_bezelsa  ;;
             4) retroarch_bezelinfo  ;;
-	        5) removebezelproject ;;
+	    5) removebezelproject ;;
             *)  break ;;
         esac
     done
