@@ -12,6 +12,7 @@ width="60"
 
 # Start oga_controls
 cd /roms/tools/BezelProject
+sudo kill -9 $(pidof oga_controls)
 sudo ./oga_controls BezelProject.sh ogs > /dev/null 2>&1 &
 
 # Welcome
@@ -451,3 +452,4 @@ dialog --backtitle "The Bezel Project" \
 # Main
 
 main_menu
+sudo kill -9 $(pidof oga_controls)
