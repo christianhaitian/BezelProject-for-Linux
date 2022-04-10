@@ -66,13 +66,12 @@ The download will also include the necessary configuration files needed for Retr
 the required retroarch.cfg files located in the ~/.config/retroarch(32) folders to point the overlays entry to the roms/_overlays.
 \n\nPeriodically, new bezel packs are completed and you will need to run the script updater to download the newest version to see these
 additional packs.\n\n**NOTE**\nThe MAME bezel back is inclusive for any roms located in the arcade/fba/mame-libretro rom folders.
- \n\n\nDo you want to proceed?" \
-    $height $width 2>&1 > /dev/tty1
+ \n\n\nDo you want to proceed?" $height $width 2>&1 > /dev/tty1
 
 case $? in
        1) sudo kill -9 $(pidof oga_controls) 
-	      exit
-	   ;;
+          exit
+          ;;
 esac
 
 
