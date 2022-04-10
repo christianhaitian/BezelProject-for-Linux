@@ -10,6 +10,14 @@ dialog --clear
 height="15"
 width="55"
 
+if [ -f "/opt/system/Advanced/Switch to main SD for Roms.sh" ]; then
+  whichsd="roms2"
+elif [ -f "/storage/.config/.OS_ARCH" ] || [ "${OS_NAME}" == "JELOS" ]; then
+  whichsd="storage/roms"
+else
+  whichsd="roms"
+fi
+
 if [[ -e "/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick" ]]; then
   param_device="anbernic"
   if [ -f "/boot/rk3326-rg351v-linux.dtb" ] || [ $(cat "/storage/.config/.OS_ARCH") == "RG351V" ]; then
@@ -52,7 +60,7 @@ else
 fi
 
 # Start oga_controls
-cd /roms/tools/BezelProject
+cd /${whichsd}/tools/BezelProject
 sudo kill -9 $(pidof oga_controls)
 sudo /opt/quitter/oga_controls BezelProject.sh $param_device > /dev/null 2>&1 &
 
@@ -133,49 +141,49 @@ function install_bezel_pack() {
     git clone --progress "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-        sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/roms/_overlays+g' "${file}"
+        sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
         echo 'video_fullscreen = "true"' >> "${file}"
     done
-    if [[ ! -d "/roms/_overlays/GameBezels/${theme}" ]]; then
-        mkdir -p "/roms/_overlays/GameBezels/${theme}"
-        ls "/tmp/${theme}/retroarch/config" >> "/roms/_overlays/GameBezels/${theme}/emulators.txt" 
-        cat "/roms/_overlays/GameBezels/${theme}/emulators.txt" >> "/roms/_overlays/all_emulators.txt"
+    if [[ ! -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
+        mkdir -p "/${whichsd}/_overlays/GameBezels/${theme}"
+        ls "/tmp/${theme}/retroarch/config" >> "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" 
+        cat "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" >> "/${whichsd}/_overlays/all_emulators.txt"
     fi
 	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch/retroarch.cfg
 	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
-	cp -rv /tmp/${theme}/retroarch/overlay/* /roms/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /roms/_overlays location..." $height $width > /dev/tty1
+	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /roms/_overlays location..." $height $width > /dev/tty1
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
     rm -rf "/tmp/${theme}"
 }
 
 function uninstall_bezel_pack() {
     local theme="$1"
-    if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
+    if [[ -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
         while IFS= read -r dir; do
             rm -rf "${HOME}/.config/retroarch/config/${dir}" 
-        done < "/roms/_overlays/${theme}/emulators.txt"
-        rm -rf "/roms/_overlays/GameBezels/${theme}"
+        done < "/${whichsd}/_overlays/${theme}/emulators.txt"
+        rm -rf "/${whichsd}/_overlays/GameBezels/${theme}"
     fi
     if [[ "${theme}" == "MAME" ]]; then
-      if [[ -d "/roms/_overlays/ArcadeBezels" ]]; then
+      if [[ -d "/${whichsd}/_overlays/ArcadeBezels" ]]; then
         while IFS= read -r dir; do
             rm -rf "${HOME}/.config/retroarch/config/${dir}" 
-        done < "/roms/_overlays/MAME/emulators.txt"      
-        rm -rf "/roms/_overlays/ArcadeBezels"
+        done < "/${whichsd}/_overlays/MAME/emulators.txt"      
+        rm -rf "/${whichsd}/_overlays/ArcadeBezels"
       fi
     fi
 }
 
 function removebezelproject() {
-    rm -rf "/roms/_overlays/GameBezels"
-    rm -rf "/roms/_overlays/ArcadeBezels"
+    rm -rf "/${whichsd}/_overlays/GameBezels"
+    rm -rf "/${whichsd}/_overlays/ArcadeBezels"
     # Code adapted from https://askubuntu.com/questions/503334/how-to-move-directories-that-were-listed-in-a-txt-file?rq=1
     while IFS= read -r dir; do
         rm -rf "${HOME}/.config/retroarch/config/${dir}" 
-    done < /roms/_overlays/all_emulators.txt
-    rm -f /roms/_overlays/all_emulators.txt
+    done < /${whichsd}/_overlays/all_emulators.txt
+    rm -f /${whichsd}/_overlays/all_emulators.txt
 }
 
 function download_bezel() {
@@ -241,7 +249,7 @@ function download_bezel() {
             if [[ $theme == "MegaDrive" ]]; then
               theme="Megadrive"
             fi
-            if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
+            if [[ -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
                 status+=("i")
                 options+=("$i" "Update or Uninstall ${theme} (installed)")
                 installed_bezelpacks+=("${theme} $repo")
@@ -261,7 +269,7 @@ function download_bezel() {
                 repo="${theme[0]}"
                 theme="${theme[1]}"
 #                if [[ "${status[choice]}" == "i" ]]; then
-                if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
+                if [[ -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
                     options=(1 "Update ${theme}" 2 "Uninstall ${theme}")
                     cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for the bezel pack" 12 40 06)
                     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty1)
@@ -296,17 +304,17 @@ function install_bezel_packsa() {
     git clone --progress "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-     sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/roms/_overlays+g' "${file}"
+     sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
      #echo 'video_fullscreen = "true"' >> "${file}"
     done
 	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch/retroarch.cfg
 	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
-	cp -rv /tmp/${theme}/retroarch/overlay/* /roms/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /roms/_overlays location..." $height $width > /dev/tty1
+	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /roms/_overlays location..." $height $width > /dev/tty1
-    #cp -r -v "/tmp/${theme}/retroarch/" "/roms/_overlays/" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /roms/_overlays location..." $height $width > /dev/tty1
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+    #cp -r -v "/tmp/${theme}/retroarch/" "/${whichsd}/_overlays/" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
     rm -rf "/tmp/${theme}"
 }
 
@@ -382,7 +390,7 @@ function download_bezelsa() {
             if [[ ${theme} == "MegaDrive" ]]; then
               theme="Megadrive"
             fi
-            if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
+            if [[ -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
                 status+=("i")
                 options+=("$i" "Update or Uninstall ${theme} (installed)")
                 installed_bezelpacks+=("${theme} ${repo}")
@@ -402,7 +410,7 @@ function download_bezelsa() {
                 repo="${theme[0]}"
                 theme="${theme[1]}"
 #                if [[ "${status[choice]}" == "i" ]]; then
-                if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
+                if [[ -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
                     options=(1 "Update ${theme}" 2 "Uninstall ${theme}")
                     cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for the bezel pack" 12 40 06)
                     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty1)
