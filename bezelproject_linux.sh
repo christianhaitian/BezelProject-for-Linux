@@ -5,21 +5,75 @@
 sudo chmod 666 /dev/tty1
 export TERM=linux
 export XDG_RUNTIME_DIR=/run/user/$UID/
-printf "\033c" > /dev/tty10
+printf "\033c" > /dev/tty1
 dialog --clear
-height="20"
-width="60"
+height="15"
+width="55"
+
+if [[ -e "/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick" ]]; then
+  param_device="anbernic"
+  if [ -f "/boot/rk3326-rg351v-linux.dtb" ] || [ $(cat "/storage/.config/.OS_ARCH") == "RG351V" ]; then
+    sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
+    height="20"
+    width="60"
+  fi
+elif [[ -e "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick" ]]; then
+  if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | $GREP "190000004b4800000010000001010000") ]]; then
+    param_device="oga"
+	hotkey="Minus"
+  else
+	param_device="rk2020"
+  fi
+elif [[ -e "/dev/input/by-path/platform-odroidgo3-joypad-event-joystick" ]]; then
+  param_device="ogs"
+  sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
+  height="20"
+  width="60"
+  if [ "$(cat ~/.config/.OS)" == "ArkOS" ] && [ "$(cat ~/.config/.DEVICE)" == "RGB10MAX" ]; then
+	height="30"
+	width="110"
+	hotkey="Minus"
+  fi
+  if [ $(cat "/storage/.config/.OS_ARCH") == "RG552" ]; then
+    power='(?<=Title_P=\").*?(?=\")'
+  fi
+elif [[ -e "/dev/input/by-path/platform-singleadc-joypad-event-joystick" ]]; then
+  param_device="rg552"
+  sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
+  height="20"
+  width="60"
+  power='(?<=Title_P=\").*?(?=\")'
+else
+  param_device="chi"
+  hotkey="1"
+  sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
+  height="20"
+  width="60"
+fi
 
 # Start oga_controls
 cd /roms/tools/BezelProject
 sudo kill -9 $(pidof oga_controls)
-sudo ./oga_controls BezelProject.sh ogs > /dev/null 2>&1 &
+sudo /opt/quitter/oga_controls BezelProject.sh $param_device > /dev/null 2>&1 &
 
 # Welcome
  dialog --backtitle "The Bezel Project" --title "The Bezel Project - Bezel Pack Utility" \
-    --yesno "\nThe Bezel Project Bezel Utility menu.\n\nThis utility will provide a downloader for Retroarach system bezel packs to be used for various systems within RetroPie.\n\nThese bezel packs will only work if the ROMs you are using are named according to the No-Intro naming convention used by EmuMovies/HyperSpin.\n\nThis utility provides a download for a bezel pack for a system and includes a PNG bezel file for every ROM for that system.  The download will also include the necessary configuration files needed for Retroarch to show them.  The script will also update the required retroarch.cfg files for the emulators located in the /opt/retropie/configs directory.  These changes are necessary to show the PNG bezels with an opacity of 1.\n\nPeriodically, new bezel packs are completed and you will need to run the script updater to download the newest version to see these additional packs.\n\n**NOTE**\nThe MAME bezel back is inclusive for any roms located in the arcade/fba/mame-libretro rom folders.\n\n\nDo you want to proceed?" \
-    28 110 2>&1 > /dev/tty1 \
-    || exit
+    --yesno "\nThe Bezel Project Bezel Utility menu.\n\nThis utility will provide a downloader
+for Retroarach system bezel packs to be used for various systems within ArkOS similar Operating Systems.\n\nThese bezel packs
+will only work if the ROMs you are using are named according to the No-Intro naming convention used by EmuMovies/HyperSpin.\n\nThis
+utility provides a download for a bezel pack for a system and includes a PNG bezel file for every ROM for that system.  
+The download will also include the necessary configuration files needed for Retroarch to show them.  The script will also update
+the required retroarch.cfg files located in the ~/.config/retroarch(32) folders to point the overlays entry to the roms/_overlays.
+\n\nPeriodically, new bezel packs are completed and you will need to run the script updater to download the newest version to see these
+additional packs.\n\n**NOTE**\nThe MAME bezel back is inclusive for any roms located in the arcade/fba/mame-libretro rom folders.
+ \n\n\nDo you want to proceed?" \
+    $height $width 2>&1 > /dev/tty1
+
+case $? in
+       1) sudo kill -9 $(pidof oga_controls) 
+	      exit
+	   ;;
+esac
 
 
 function main_menu() {
