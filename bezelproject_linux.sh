@@ -95,11 +95,11 @@ function install_bezel_pack() {
 
 function uninstall_bezel_pack() {
     local theme="$1"
-    if [[ -d "/roms/_overlays/retroarch/overlay/GameBezels/${theme}" ]]; then
+    if [[ -d "/roms/_overlays/GameBezels/${theme}" ]]; then
         while IFS= read -r dir; do
             rm -rf "${HOME}/.config/retroarch/config/${dir}" 
         done < "/roms/_overlays/${theme}/emulators.txt"
-        rm -rf "/roms/_overlays/retroarch/overlay/GameBezels/${theme}"
+        rm -rf "/roms/_overlays/GameBezels/${theme}"
     fi
     if [[ "${theme}" == "MAME" ]]; then
       if [[ -d "/roms/_overlays/ArcadeBezels" ]]; then
