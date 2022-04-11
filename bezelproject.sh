@@ -115,12 +115,12 @@ function main_menu() {
 
 function update_script() {
     # Code taken and modified from https://stackoverflow.com/questions/4774054/reliable-way-for-a-bash-script-to-get-the-full-path-to-itself
-    SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; pwd -P )"
+#    SCRIPTPATH="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; pwd -P )"
 
 #    mv "${SCRIPTPATH}/bezelproject_linux.sh" "${SCRIPTPATH}/bezelproject_linux.sh.bkp"
     wget -t 3 -T 60 -q --show-progress "https://raw.githubusercontent.com/christianhaitian/BezelProject-for-rk3326/master/bezelproject.sh" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing bezelproject script update..." $height $width > /dev/tty1
-    mv "${SCRIPTPATH}/bezelproject.sh" "../bezelproject.sh"
+    mv "/$whichsd/tools/BezelProject/bezelproject.sh" "/$whichsd/tools/bezelproject.sh"
     chmod 777 "../bezelproject.sh"
     sudo kill -9 $(pidof oga_controls)
     exit
