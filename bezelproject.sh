@@ -138,7 +138,7 @@ function install_bezel_pack() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-	git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1
+	git clone --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1
     #git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
@@ -308,7 +308,7 @@ function install_bezel_packsa() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-	git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
+	git clone --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
     #git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
