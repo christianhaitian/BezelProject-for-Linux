@@ -306,9 +306,12 @@ function install_bezel_packsa() {
         theme="default"
         repo="default"
     fi
+    if [[ ! -d "/${whichsd}/_overlays/GameBezels" ]]; then
+        mkdir -p "/${whichsd}/_overlays/GameBezels"
+    fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-	git clone --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
+    git clone --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
     #git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
