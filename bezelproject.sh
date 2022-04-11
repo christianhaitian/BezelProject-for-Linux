@@ -62,7 +62,7 @@ fi
 # Start oga_controls
 cd /${whichsd}/tools/BezelProject
 sudo kill -9 $(pidof oga_controls)
-sudo /opt/quitter/oga_controls BezelProject.sh $param_device > /dev/null 2>&1 &
+sudo /opt/quitter/oga_controls bezelproject.sh $param_device > /dev/null 2>&1 &
 
 # Welcome
  dialog --backtitle "The Bezel Project" --title "The Bezel Project - Bezel Pack Utility" \
