@@ -1,8 +1,8 @@
 # Bezelproject for Linux
 
-A modified script of the BezelProject to allow for compatibility with regular Linux systems. Requires dialog. It also assumes a default installation of retroarch (i. e. through a package manager).
+A modified script of the BezelProject to allow for compatibility with rk3326 devices. Requires dialog. It also assumes a retroarch and retroarch32 configuration folders are located in the ~/.config folder.
 
-To get dialog on Arch Linux use ***sudo pacman -S dialog***.
+To get dialog on Ubuntu/Debian Linux use ***sudo apt install dialog***.
 
 -------
 OVERVIEW
@@ -28,13 +28,11 @@ NOTE: do not install the script as user 'root'.  Only install the script as a no
 
 Before downloading, make sure bezels are enabled in retroarch by going to **Settings>On-Screen Display>Display Overlay** and setting it to "ON".
 
-Type the following commands:
+Do the following:
 
-***wget https://raw.githubusercontent.com/Nitr4m12/BezelProject-for-Linux/master/bezelproject_linux.sh***
-
-***chmod +x bezelproject_linux.sh***
-
-***./bezelproject_linux.sh*** or ***bash bezelproject_linux.sh***
+* Place the BezelProject folder in /roms/tools.  The .sh file can be installed in the BezelProject folder or in the tools folder.
+   * For ArkOS on the RG351V or RG351MP, if SD2 is being used for roms, installation must be in /roms2/tools/. The .sh file can be installed in the BezelProject folder or in the tools folder.
+* Run BezelProject.sh from ArkOS through Options > Tools system menu.
 
 -------
 UNINSTALL
