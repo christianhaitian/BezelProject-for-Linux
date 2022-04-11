@@ -138,7 +138,8 @@ function install_bezel_pack() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    git clone --progress "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+	git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1
+    #git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
         sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
@@ -155,6 +156,12 @@ function install_bezel_pack() {
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+	if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
+	   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
+	   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
+	  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+	fi
     rm -rf "/tmp/${theme}"
 }
 
@@ -301,7 +308,8 @@ function install_bezel_packsa() {
     fi
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
-    git clone --progress "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+	git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
+    #git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
      sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
@@ -313,8 +321,12 @@ function install_bezel_packsa() {
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
-    #cp -r -v "/tmp/${theme}/retroarch/" "/${whichsd}/_overlays/" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+	if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
+	   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
+	   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
+	  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+	fi
     rm -rf "/tmp/${theme}"
 }
 
@@ -510,7 +522,7 @@ echo "" >> /tmp/bezelprojectinfo.txt
 
 dialog --backtitle "The Bezel Project" \
 --title "The Bezel Project - Bezel Pack Utility" \
---textbox /tmp/bezelprojectinfo.txt 30 110
+--textbox /tmp/bezelprojectinfo.txt $height $width
 }
 
 # Main
