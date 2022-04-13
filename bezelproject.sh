@@ -175,7 +175,7 @@ function install_bezel_pack() {
     #git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-        sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
+        sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
         echo 'video_fullscreen = "true"' >> "${file}"
     done
     if [[ ! -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
@@ -348,7 +348,7 @@ function install_bezel_packsa() {
     #git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
     find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-     sed -i 's+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g' "${file}"
+     sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
      #echo 'video_fullscreen = "true"' >> "${file}"
     done
 	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch/retroarch.cfg
