@@ -64,6 +64,37 @@ cd /${whichsd}/tools/BezelProject
 sudo kill -9 $(pidof oga_controls)
 sudo /opt/quitter/oga_controls bezelproject.sh $param_device > /dev/null 2>&1 &
 
+# Verify there's an active internet connection
+GW=`ip route | awk '/default/ { print $3 }'`
+if [ -z "$GW" ]; then
+  printf "\n\nYour network connection doesn't seem to be working."
+  printf "\nDid you make sure to configure your wifi connection?"
+  sleep 5
+  sudo kill -9 $(pidof oga_controls)
+  sudo systemctl restart oga_events &
+  exit 0
+fi
+
+# Verify dialog is installed and if not, install it
+dpkg -s "dialog" &>/dev/null
+if [ "$?" != "0" ]; then
+  sudo apt update && sudo apt install -y dialog --no-install-recommends
+  temp=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+  if [[ $temp == *"ArkOS 351P/M"* ]]; then
+    #Make sure sdl2 wasn't impacted by the install of dialog for the 351P/M
+    sudo ln -sfv /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0.14.1 /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0
+    sudo ln -sfv /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.10.0 /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0
+  fi
+fi
+
+# Make sure time is synced
+isitarkos=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+if [[ $isitarkos == *"ArkOS"* ]]; then
+  if [[ ! -z $( timedatectl | grep inactive ) ]]; then
+    sudo timedatectl set-ntp 1
+  fi
+fi
+
 # Welcome
  dialog --backtitle "The Bezel Project" --title "The Bezel Project - Bezel Pack Utility" \
     --yesno "\nThe Bezel Project Bezel Utility menu.\n\nThis utility will provide a downloader
@@ -77,7 +108,8 @@ additional packs.\n\n**NOTE**\nThe MAME bezel back is inclusive for any roms loc
  \n\n\nDo you want to proceed?" $height $width 2>&1 > /dev/tty1
 
 case $? in
-       1) sudo kill -9 $(pidof oga_controls) 
+       1) sudo kill -9 $(pidof oga_controls)
+          sudo systemctl restart oga_events &
           exit
           ;;
 esac
@@ -123,6 +155,7 @@ function update_script() {
     mv -f "/${whichsd}/tools/BezelProject/bezelproject.sh" "/${whichsd}/tools/bezelproject.sh"
     chmod 777 "/${whichsd}/tools/bezelproject.sh"
     sudo kill -9 $(pidof oga_controls)
+    sudo systemctl restart oga_events &
     exit
 }
 
@@ -532,3 +565,4 @@ dialog --backtitle "The Bezel Project" \
 
 main_menu
 sudo kill -9 $(pidof oga_controls)
+sudo systemctl restart oga_events &
