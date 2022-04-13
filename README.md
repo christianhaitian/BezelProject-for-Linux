@@ -24,14 +24,13 @@ Only one bezel can exist for a specific game name, so systems that share the sam
 -------
 INSTALLATION
 
-NOTE: do not install the script as user 'root'.  Only install the script as a normal user...otherwise it may cause future errors. MAKE SURE **DIALOG** IS INSTALLED OR THE SCRIPT WON'T WORK.
-
 Before downloading, make sure bezels are enabled in retroarch by going to **Settings>On-Screen Display>Display Overlay** and setting it to "ON".
 
 Do the following:
 
-* Place the BezelProject folder in /roms/tools.  The .sh file can be installed in the BezelProject folder or in the tools folder.
-   * For ArkOS on the RG351V or RG351MP, if SD2 is being used for roms, installation must be in /roms2/tools/. The .sh file can be installed in the BezelProject folder or in the tools folder.
+* Click on the green code button above and download the zip.
+* Open the zip and place the BezelProject folder in /roms/tools.  The .sh file can be installed in the BezelProject folder or in the /roms/tools folder.
+   * For ArkOS on the RG351V or RG351MP, if SD2 is being used for roms, installation must be in /roms2/tools/. The .sh file can be installed in the BezelProject folder or in the /roms2/tools folder.
 * Run BezelProject.sh from ArkOS through Options > Tools system menu.
 
 -------
