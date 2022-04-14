@@ -185,32 +185,38 @@ function install_bezel_pack() {
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
 	git clone --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1
-    #git clone -n --depth 1 "https://github.com/${repo}/bezelproject-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
-    find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-        sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
-        echo 'video_fullscreen = "true"' >> "${file}"
-    done
-    if [[ ! -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
-        mkdir -p "/${whichsd}/_overlays/GameBezels/${theme}"
-        ls "/tmp/${theme}/retroarch/config" >> "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" 
-        cat "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" >> "/${whichsd}/_overlays/all_emulators.txt"
-    fi
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
-	imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
-	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
-	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
-	if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
-	   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
-	   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
-	  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+	if [ "$?" == "0" ]; then
+		find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
+			sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
+			echo 'video_fullscreen = "true"' >> "${file}"
+		done
+		if [[ ! -d "/${whichsd}/_overlays/GameBezels/${theme}" ]]; then
+			mkdir -p "/${whichsd}/_overlays/GameBezels/${theme}"
+			ls "/tmp/${theme}/retroarch/config" >> "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" 
+			cat "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" >> "/${whichsd}/_overlays/all_emulators.txt"
+		fi
+		sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
+		sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+		imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
+		cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
+		   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
+		   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
+		  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		fi
+		rm -rf "/tmp/${theme}"
+	else
+		printf "\n\nThe git clone of ${theme} bezel pack"
+		printf "\ndid not complete successfully. Do you"
+		printf "\nhave enough space left on your sd card?"
+		sleep 5
+		rm -rf "/tmp/${theme}"
 	fi
-    rm -rf "/tmp/${theme}"
 }
 
 function uninstall_bezel_pack() {
@@ -360,27 +366,33 @@ function install_bezel_packsa() {
     atheme=`echo ${theme} | sed 's/.*/\L&/'`
 
     git clone --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1
-    #git clone -n --depth 1 "https://github.com/${repo}/bezelprojectsa-${theme}.git" "/tmp/${theme}" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Downloading and installing ${theme} bezel pack..." $height $width > /dev/tty1
-    find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
-     sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
-     #echo 'video_fullscreen = "true"' >> "${file}"
-    done
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
-	imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
-	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
-	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
-	if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
-	   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
-	   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
-	  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
-			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+	if [ "$?" == "0" ]; then
+		find "/tmp/${theme}/retroarch/config/" -type f -name "*.cfg" -print0 | while IFS= read -r -d '' file; do
+		 sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
+		 #echo 'video_fullscreen = "true"' >> "${file}"
+		done
+		sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
+		sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+		imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
+		cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		if [ "${theme}" == "GBA" ] || [ "${theme}" == "MSX" ] || [ "${theme}" == "MSX2" ] \
+		   || [ "${theme}" == "MegaDrive" ] || [ "${theme}" == "MasterSystem" ] || [ "${theme}" == "SNES" ] \
+		   || [ "${theme}" == "GBA" ] || [ "${theme}" == "Sega32x" ] || [ "${theme}" == "SegaCD" ] || [ "${theme}" == "AtariLynx" ]; then
+		  cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch32/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+				  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
+		fi
+		rm -rf "/tmp/${theme}"
+	else
+		printf "\n\nThe git clone of ${theme} bezel pack"
+		printf "\ndid not complete successfully. Do you"
+		printf "\nhave enough space left on your sd card?"
+		sleep 5
+		rm -rf "/tmp/${theme}"
 	fi
-    rm -rf "/tmp/${theme}"
 }
 
 function download_bezelsa() {
