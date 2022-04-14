@@ -9,6 +9,7 @@ printf "\033c" > /dev/tty1
 dialog --clear
 height="15"
 width="55"
+res="640x360"
 
 if [ -f "/opt/system/Advanced/Switch to main SD for Roms.sh" ]; then
   whichsd="roms2"
@@ -79,6 +80,18 @@ fi
 dpkg -s "dialog" &>/dev/null
 if [ "$?" != "0" ]; then
   sudo apt update && sudo apt install -y dialog --no-install-recommends
+  temp=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+  if [[ $temp == *"ArkOS 351P/M"* ]]; then
+    #Make sure sdl2 wasn't impacted by the install of dialog for the 351P/M
+    sudo ln -sfv /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0.14.1 /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0
+    sudo ln -sfv /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0.10.0 /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0
+  fi
+fi
+
+# Verify imgp is installed so images can be resized to a lower resolution.
+dpkg -s "imgp" &>/dev/null
+if [ "$?" != "0" ]; then
+  sudo apt update && sudo apt install -y imgp --no-install-recommends
   temp=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
   if [[ $temp == *"ArkOS 351P/M"* ]]; then
     #Make sure sdl2 wasn't impacted by the install of dialog for the 351P/M
@@ -183,8 +196,10 @@ function install_bezel_pack() {
         ls "/tmp/${theme}/retroarch/config" >> "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" 
         cat "/${whichsd}/_overlays/GameBezels/${theme}/emulators.txt" >> "/${whichsd}/_overlays/all_emulators.txt"
     fi
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch/retroarch.cfg
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
+	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+	imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
@@ -351,8 +366,10 @@ function install_bezel_packsa() {
      sed -i "s+/opt/retropie/configs/all/retroarch/overlay+/${whichsd}/_overlays+g" "${file}"
      #echo 'video_fullscreen = "true"' >> "${file}"
     done
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch/retroarch.cfg
-	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/roms\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch/retroarch.cfg
+	sed -i "/overlay_directory \=/c\overlay_directory \= \"\/${whichsd}\/_overlays\"" ~/.config/retroarch32/retroarch.cfg
+	imgp -x ${res} -wr /tmp/${theme}/retroarch/overlay/ | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
+			  --progressbox "Resizing ${theme} bezel pack images..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/overlay/* /${whichsd}/_overlays/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Copying ${theme} bezel pack to /${whichsd}/_overlays location..." $height $width > /dev/tty1
 	cp -rv /tmp/${theme}/retroarch/config/ ${HOME}/.config/retroarch/ 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
