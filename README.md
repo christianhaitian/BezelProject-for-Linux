@@ -1,8 +1,8 @@
 # Bezelproject for Linux
 
-A modified script of the BezelProject to allow for compatibility with rk3326 devices. Requires dialog. It also assumes a retroarch and retroarch32 configuration folders are located in the ~/.config folder.
+A modified script of the BezelProject to allow for compatibility with rk3326 devices running ArkOS, TheRA, or RetroOZ. Requires dialog and imgp which will be installed on first run of the script if not already available. It also assumes a retroarch and retroarch32 configuration folders are located in the ~/.config folder.
 
-To get dialog on Ubuntu/Debian Linux use ***sudo apt install dialog***.
+To manually install dialog and imgp on Ubuntu/Debian Linux use ***sudo apt update -y && sudo apt install -y dialog imgp***.
 
 -------
 OVERVIEW
@@ -40,9 +40,9 @@ NOTE: This modified script only uninstalls the bezels, and not the .cfg files in
 
 To manually remove The Bezel Project, delete the following directories.
 
-~/.config/retroarch/overlay/ArcadeBezels
+/roms/_overlays/ArcadeBezels (or /roms2/_overlays/ArcadeBezels if using ArkOS on a device that supports a second sd card and you've activated that)
 
-~/.config/retroarch/overlay/GameBezels
+/roms/_overlays/GameBezels (or /roms2/_overlays/GameBezels if using ArkOS on a device that supports a second sd card and you've activated that)
 
 Edit the retroarch.cfg located in the main directory (I recommend making a backup first):
 
