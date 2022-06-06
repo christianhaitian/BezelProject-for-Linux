@@ -43,15 +43,15 @@ elif [[ -e "/dev/input/by-path/platform-odroidgo3-joypad-event-joystick" ]]; the
 	width="110"
 	hotkey="Minus"
   fi
-  if [ $(cat "/storage/.config/.OS_ARCH") == "RG552" ]; then
-    power='(?<=Title_P=\").*?(?=\")'
-  fi
 elif [[ -e "/dev/input/by-path/platform-singleadc-joypad-event-joystick" ]]; then
-  param_device="rg552"
+  #if [ "${OS_NAME}" == "JELOS" ]; then
+    #param_device="rg552"
+  #else
+    param_device="rg503"
+  #fi
   sudo setfont /usr/share/consolefonts/Lat7-Terminus20x10.psf.gz
   height="20"
   width="60"
-  power='(?<=Title_P=\").*?(?=\")'
 else
   param_device="chi"
   hotkey="1"
@@ -63,7 +63,8 @@ fi
 # Start oga_controls
 cd /${whichsd}/tools/BezelProject
 sudo kill -9 $(pidof oga_controls)
-sudo /opt/quitter/oga_controls bezelproject.sh $param_device > /dev/null 2>&1 &
+sudo ./oga_controls bezelproject.sh $param_device > /dev/null 2>&1 &
+#sudo /opt/quitter/oga_controls bezelproject.sh $param_device > /dev/null 2>&1 &
 
 # Verify there's an active internet connection
 GW=`ip route | awk '/default/ { print $3 }'`
