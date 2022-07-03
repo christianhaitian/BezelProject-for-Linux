@@ -29,7 +29,7 @@ Before downloading, make sure bezels are enabled in retroarch by going to **Sett
 Do the following:
 
 * Click on the green code button above and download the zip.
-* Open the zip and place the BezelProject folder in /roms/tools.  The .sh file can be installed in the BezelProject folder or in the /roms/tools folder.
+* Open the zip, then click into the `BezelProject-for-rk3326-master` folder and copy the BezelProject folder to /roms/tools.  The .sh file can be installed in the BezelProject folder or in the /roms/tools folder.
    * For ArkOS on the RG351V or RG351MP, if SD2 is being used for roms, installation must be in /roms2/tools/. The .sh file can be installed in the BezelProject folder or in the /roms2/tools folder.
 * Run BezelProject.sh from ArkOS through Options > Tools system menu.
 
