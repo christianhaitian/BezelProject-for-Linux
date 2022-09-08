@@ -589,7 +589,7 @@ echo "" >> /tmp/bezelprojectinfo.txt
 
 dialog --backtitle "The Bezel Project" \
 --title "The Bezel Project - Bezel Pack Utility" \
---textbox /tmp/bezelprojectinfo.txt $height $width
+--textbox /tmp/bezelprojectinfo.txt $height $width 2>&1 >/dev/tty1
 }
 
 # Main
