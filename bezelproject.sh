@@ -27,7 +27,7 @@ if [[ -e "/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"
     width="60"
   fi
 elif [[ -e "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick" ]]; then
-  if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | $GREP "190000004b4800000010000001010000") ]]; then
+  if [[ ! -z $(cat /etc/emulationstation/es_input.cfg | grep "190000004b4800000010000001010000") ]]; then
     param_device="oga"
 	hotkey="Minus"
   else
@@ -81,7 +81,7 @@ fi
 dpkg -s "dialog" &>/dev/null
 if [ "$?" != "0" ]; then
   sudo apt update && sudo apt install -y dialog --no-install-recommends
-  temp=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+  temp=$(grep "title=" /usr/share/plymouth/themes/text.plymouth)
   if [[ $temp == *"ArkOS 351P/M"* ]]; then
     #Make sure sdl2 wasn't impacted by the install of dialog for the 351P/M
     sudo ln -sfv /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0.14.1 /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0
@@ -93,7 +93,7 @@ fi
 dpkg -s "imgp" &>/dev/null
 if [ "$?" != "0" ]; then
   sudo apt update && sudo apt install -y imgp --no-install-recommends
-  temp=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+  temp=$(grep "title=" /usr/share/plymouth/themes/text.plymouth)
   if [[ $temp == *"ArkOS 351P/M"* ]]; then
     #Make sure sdl2 wasn't impacted by the install of dialog for the 351P/M
     sudo ln -sfv /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0.14.1 /usr/lib/aarch64-linux-gnu/libSDL2-2.0.so.0
@@ -102,7 +102,7 @@ if [ "$?" != "0" ]; then
 fi
 
 # Make sure time is synced
-isitarkos=$($GREP "title=" /usr/share/plymouth/themes/text.plymouth)
+isitarkos=$(grep "title=" /usr/share/plymouth/themes/text.plymouth)
 if [[ $isitarkos == *"ArkOS"* ]]; then
   if [[ ! -z $( timedatectl | grep inactive ) ]]; then
     sudo timedatectl set-ntp 1
