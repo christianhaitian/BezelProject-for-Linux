@@ -167,7 +167,7 @@ function update_script() {
     wget -t 3 -T 60 -q --show-progress "https://raw.githubusercontent.com/christianhaitian/BezelProject-for-rk3326/master/bezelproject.sh" 2>&1 | stdbuf -oL sed -E 's/\.\.+/---/g'| dialog \
 			  --progressbox "Downloading and installing bezelproject script update..." $height $width > /dev/tty1
     mv -f "/${whichsd}/tools/BezelProject/bezelproject.sh" "/${whichsd}/tools/bezelproject.sh"
-    chmod 777 "/${whichsd}/tools/bezelproject.sh"
+    sudo chmod 777 "/${whichsd}/tools/bezelproject.sh"
     sudo kill -9 $(pidof oga_controls)
     sudo systemctl restart oga_events &
     exit
